@@ -15,6 +15,7 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {}
 
+
 void GameScene::Draw() {
 
 	// コマンドリストの取得
