@@ -4,6 +4,7 @@
 #include "WorldTransform.h"
 #include "Input.h"
 #include "affine.h"
+#include "PlayerBullet.h"
 
 class Player {
 
@@ -12,11 +13,19 @@ public:
 
 	void Update();
 
+	void Rotate();
+
+	void Attack();
+
 	void Draw();
 
 	Input* input_ = nullptr;
 
+	PlayerBullet* bullet_ = nullptr;
+
 private:
+
+	Vector3 move = {0, 0, 0}; // 初期化をゼロベクトルに変更
 
 	WorldTransform worldTransform_;
 

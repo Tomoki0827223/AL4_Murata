@@ -14,9 +14,10 @@ void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 }
 
 void Player::Update() {
-	Vector3 move = {0, 0, 0}; // 初期化をゼロベクトルに変更
-
 	const float kCharacterSpeed = 1.0f;
+
+	// 移動量を毎フレームリセット
+	move = {0, 0, 0};
 
 	// キー入力に応じて移動量を変更
 	if (input_->PushKey(DIK_LEFT)) {
@@ -35,13 +36,48 @@ void Player::Update() {
 	// 移動ベクトルを現在の座標に加算
 	worldTransform_.translation_ += move;
 
+	Rotate(); // 回転処理
+	Attack(); // 攻撃処理
+
+	if (bullet_) {
+		bullet_->Update(); // 弾の更新
+	}
+
 	// アフィン変換行列を更新
-	worldTransform_.UpdateMatrix(); // TransferMatrix()を直接呼ばず、行列更新も含める
+	worldTransform_.UpdateMatrix();
 }
 
 
+void Player::Rotate() {
+	// 回転速さ [ラジアン/frame]
+	const float kRotSpeed = 0.02f;
+
+	// キー入力に応じてY軸周りの回転を変更
+	if (input_->PushKey(DIK_A)) {
+		// Y軸周り角度を回転速さ分減算
+		worldTransform_.rotation_.y -= kRotSpeed;
+	} else if (input_->PushKey(DIK_D)) {
+		// Y軸周り角度を回転速さ分加算
+		worldTransform_.rotation_.y += kRotSpeed;
+	}
+}
+
+void Player::Attack() 
+{
+	if (input_->PushKey(DIK_SPACE)) {
+
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(model_, worldTransform_.translation_);
+
+		bullet_ = newBullet;
+	}
+}
 
 void Player::Draw() 
 { 
 	model_->Draw(worldTransform_, *viewProjection_, textureHandle_); 
+
+	if (bullet_) {
+		bullet_->Draw(*viewProjection_);
+	}
 }
