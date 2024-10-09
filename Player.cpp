@@ -16,7 +16,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 void Player::Update() {
 	Vector3 move = {0, 0, 0}; // 初期化をゼロベクトルに変更
 
-	const float kCharacterSpeed = 2.0f;
+	const float kCharacterSpeed = 1.0f;
 
 	// キー入力に応じて移動量を変更
 	if (input_->PushKey(DIK_LEFT)) {
