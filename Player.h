@@ -1,16 +1,15 @@
 #pragma once
 
-#include <Model.h>
-#include "WorldTransform.h"
 #include "Input.h"
-#include "affine.h"
 #include "PlayerBullet.h"
+#include "WorldTransform.h"
+#include "affine.h"
+#include <Model.h>
 #include <list>
 
 class Player {
 
 public:
-
 	~Player();
 
 	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection);
@@ -28,7 +27,6 @@ public:
 	std::list<PlayerBullet*> bullets_;
 
 private:
-
 	Vector3 move = {0, 0, 0}; // 初期化をゼロベクトルに変更
 
 	WorldTransform worldTransform_;

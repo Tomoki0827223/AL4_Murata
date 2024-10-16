@@ -3,7 +3,6 @@
 
 Player::~Player() {
 
-
 	for (PlayerBullet* bullet : bullets_) {
 		delete bullet;
 	}
@@ -12,7 +11,7 @@ Player::~Player() {
 }
 
 void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection) {
-	
+
 	input_ = Input::GetInstance();
 	assert(model);
 
@@ -58,8 +57,6 @@ void Player::Update() {
 	worldTransform_.UpdateMatrix();
 }
 
-
-
 void Player::Rotate() {
 	// 回転速さ [ラジアン/frame]
 	const float kRotSpeed = 0.02f;
@@ -74,23 +71,18 @@ void Player::Rotate() {
 	}
 }
 
-void Player::Attack() 
-{
+void Player::Attack() {
 	if (input_->PushKey(DIK_SPACE)) {
 
-		const float kBulletSpeed = 1.0f;
-		Vector3 velocity(0, 0, kBulletSpeed);
-
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+		newBullet->Initialize(model_, worldTransform_.translation_);
 
 		bullets_.push_back(newBullet);
 	}
 }
 
-void Player::Draw() 
-{ 
-	model_->Draw(worldTransform_, *viewProjection_, textureHandle_); 
+void Player::Draw() {
+	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
 
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Draw(*viewProjection_);

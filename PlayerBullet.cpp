@@ -1,7 +1,6 @@
 #include "PlayerBullet.h"
 
-void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity)
-{ 
+void PlayerBullet::Initialize(Model* model, const Vector3& position) {
 	assert(model);
 	model_ = model;
 
@@ -10,17 +9,8 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	worldTransform_.Initialize();
 
 	worldTransform_.translation_ = position;
-
-	velocity_ = velocity;
 }
 
-void PlayerBullet::Update() { 
+void PlayerBullet::Update() { worldTransform_.UpdateMatrix(); }
 
-	worldTransform_.UpdateMatrix();
-	worldTransform_.translation_ += velocity_;
-}
-
-void PlayerBullet::Draw(const ViewProjection& viewProjection) 
-{
-	model_->Draw(worldTransform_,viewProjection,textureHandle_);
-}
+void PlayerBullet::Draw(const ViewProjection& viewProjection) { model_->Draw(worldTransform_, viewProjection, textureHandle_); }
