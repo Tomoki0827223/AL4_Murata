@@ -61,6 +61,7 @@ void Player::Update() {
 }
 
 
+
 void Player::Rotate() {
 	// 回転速さ [ラジアン/frame]
 	const float kRotSpeed = 0.02f;
