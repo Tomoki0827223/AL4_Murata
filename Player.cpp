@@ -9,8 +9,6 @@ Player::~Player() {
 	}
 
 	bullets_.clear();
-	
-	delete model_;
 }
 
 void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection) {
@@ -80,8 +78,11 @@ void Player::Attack()
 {
 	if (input_->PushKey(DIK_SPACE)) {
 
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0, 0, kBulletSpeed);
+
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_);
+		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
 		bullets_.push_back(newBullet);
 	}

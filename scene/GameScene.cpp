@@ -2,13 +2,18 @@
 #include "TextureManager.h"
 #include <cassert>
 
-GameScene::GameScene() {
+GameScene::GameScene() 
+{
+
+}
+
+GameScene::~GameScene() {
 
 	delete sprite_;
 	delete player_;
+	delete model_;
 }
 
-GameScene::~GameScene() {}
 
 void GameScene::Initialize() {
 
