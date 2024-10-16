@@ -7,6 +7,7 @@ GameScene::GameScene()
 
 }
 
+
 GameScene::~GameScene() {
 
 	delete sprite_;
