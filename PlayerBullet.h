@@ -18,6 +18,8 @@ public:
 
 	void Draw(const ViewProjection& viewProjection);
 
+	bool isDead() const { return isDead_; }
+
 private:
 
 	WorldTransform worldTransform_;
@@ -27,4 +29,9 @@ private:
 	uint32_t textureHandle_ = 0u;
 
 	Vector3 velocity_;
+
+	//弾消えるsyori
+	static const int32_t kLifeTime = 60 * 5;
+	int32_t deathTimer_ = kLifeTime;
+	bool isDead_ = false;
 };

@@ -29,6 +29,14 @@ void Player::Update() {
 	// 移動量を毎フレームリセット
 	move = {0, 0, 0};
 
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->isDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
 	// キー入力に応じて移動量を変更
 	if (input_->PushKey(DIK_LEFT)) {
 		move.x -= kCharacterSpeed;
@@ -80,6 +88,8 @@ void Player::Attack()
 
 		const float kBulletSpeed = 1.0f;
 		Vector3 velocity(0, 0, kBulletSpeed);
+
+		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
