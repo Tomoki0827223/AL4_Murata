@@ -5,7 +5,6 @@
 GameScene::GameScene() {
 
 	delete sprite_;
-
 	delete player_;
 }
 

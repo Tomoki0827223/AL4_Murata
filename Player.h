@@ -5,10 +5,14 @@
 #include "Input.h"
 #include "affine.h"
 #include "PlayerBullet.h"
+#include <list>
 
 class Player {
 
 public:
+
+	~Player();
+
 	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection);
 
 	void Update();
@@ -21,7 +25,7 @@ public:
 
 	Input* input_ = nullptr;
 
-	PlayerBullet* bullet_ = nullptr;
+	std::list<PlayerBullet*> bullets_;
 
 private:
 

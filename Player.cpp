@@ -1,6 +1,18 @@
 #include "Player.h"
 #include "cassert"
 
+Player::~Player() {
+
+
+	for (PlayerBullet* bullet : bullets_) {
+		delete bullet;
+	}
+
+	bullets_.clear();
+	
+	delete model_;
+}
+
 void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection) {
 	
 	input_ = Input::GetInstance();
@@ -39,8 +51,9 @@ void Player::Update() {
 	Rotate(); // 回転処理
 	Attack(); // 攻撃処理
 
-	if (bullet_) {
-		bullet_->Update(); // 弾の更新
+	for (PlayerBullet* bullet : bullets_) {
+
+		bullet->Update();
 	}
 
 	// アフィン変換行列を更新
@@ -69,7 +82,7 @@ void Player::Attack()
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialize(model_, worldTransform_.translation_);
 
-		bullet_ = newBullet;
+		bullets_.push_back(newBullet);
 	}
 }
 
@@ -77,7 +90,7 @@ void Player::Draw()
 { 
 	model_->Draw(worldTransform_, *viewProjection_, textureHandle_); 
 
-	if (bullet_) {
-		bullet_->Draw(*viewProjection_);
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Draw(*viewProjection_);
 	}
 }
