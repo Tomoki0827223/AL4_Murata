@@ -47,9 +47,11 @@ private: // メンバ変数
 	Audio* audio_ = nullptr;
 
 	Sprite* sprite_ = nullptr;
+	Sprite* sprite_Enemy_ = nullptr;
 	ViewProjection viewProjection_;
 	Player* player_ = nullptr;
 	Model* model_ = nullptr;
+	Model* Enemymodel_ = nullptr;
 	Enemy* enemy_ = nullptr;
 
 	uint32_t textureHandle_ = 0;

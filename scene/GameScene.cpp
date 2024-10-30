@@ -12,8 +12,10 @@ GameScene::GameScene()
 GameScene::~GameScene() {
 
 	delete sprite_;
+	delete sprite_Enemy_;
 	delete player_;
 	delete model_;
+	delete Enemymodel_;
 	delete enemy_;
 }
 
@@ -25,12 +27,13 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	model_ = Model::Create();
+	Enemymodel_ = Model::Create();
 
 	textureHandle_ = TextureManager::Load("mario.jpg");
-	textureHandle_Enemy_ = TextureManager::Load("uvChecker.png");
+	textureHandle_Enemy_ = TextureManager::Load("hito.png");
 
 	sprite_ = Sprite::Create(textureHandle_, {100, 50});
-	sprite_ = Sprite::Create(textureHandle_Enemy_, {100, 50});
+	sprite_Enemy_ = Sprite::Create(textureHandle_Enemy_, {100, 50});
 
 	viewProjection_.Initialize();
 
@@ -39,7 +42,7 @@ void GameScene::Initialize() {
 
 	player_->Initialize(model_, textureHandle_, &viewProjection_);
 
-	enemy_->Initialize(model_, textureHandle_Enemy_, &viewProjection_);
+	enemy_->Initialize(Enemymodel_, textureHandle_Enemy_, &viewProjection_);
 }
 
 void GameScene::Update() {
