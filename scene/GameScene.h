@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "Model.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
@@ -49,8 +50,10 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	Player* player_ = nullptr;
 	Model* model_ = nullptr;
+	Enemy* enemy_ = nullptr;
 
 	uint32_t textureHandle_ = 0;
+	uint32_t textureHandle_Enemy_ = 0;
 
 	/// <summary>
 	/// ゲームシーン用

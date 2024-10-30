@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
+#include "imgui.h"
 
 GameScene::GameScene() 
 {
@@ -13,6 +14,7 @@ GameScene::~GameScene() {
 	delete sprite_;
 	delete player_;
 	delete model_;
+	delete enemy_;
 }
 
 
@@ -25,17 +27,40 @@ void GameScene::Initialize() {
 	model_ = Model::Create();
 
 	textureHandle_ = TextureManager::Load("mario.jpg");
+	textureHandle_Enemy_ = TextureManager::Load("uvChecker.png");
 
 	sprite_ = Sprite::Create(textureHandle_, {100, 50});
+	sprite_ = Sprite::Create(textureHandle_Enemy_, {100, 50});
 
 	viewProjection_.Initialize();
 
 	player_ = new Player();
+	enemy_ = new Enemy();
 
 	player_->Initialize(model_, textureHandle_, &viewProjection_);
+
+	enemy_->Initialize(model_, textureHandle_Enemy_, &viewProjection_);
 }
 
-void GameScene::Update() { player_->Update(); }
+void GameScene::Update() {
+	player_->Update();
+	enemy_->Update();
+
+	Vector3 enemyPosition = enemy_->GetPosition();
+	Vector3 enemyVelocity = enemy_->GetVelocity();
+	float enemyRotationX = enemy_->GetRotationX();
+
+	ImGui::Begin("Enemy Controls");
+	ImGui::SliderFloat3("Position", &enemyPosition.x, -10.0f, 10.0f);   // 位置を調整
+	ImGui::SliderFloat("Velocity Z", &enemyVelocity.z, -1.0f, 1.0f);    // Z軸速度を調整
+	ImGui::SliderAngle("Rotation X", &enemyRotationX, -180.0f, 180.0f); // 回転角を調整
+	ImGui::End();
+
+	// ImGuiの変更をEnemyに適用
+	enemy_->SetPosition(enemyPosition);
+	enemy_->SetVelocity(enemyVelocity);
+	enemy_->SetRotationX(enemyRotationX);
+}
 
 void GameScene::Draw() {
 
@@ -61,6 +86,7 @@ void GameScene::Draw() {
 	Model::PreDraw(commandList);
 
 	player_->Draw();
+	enemy_->Draw();
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
