@@ -4,6 +4,12 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
+enum class Phase {
+
+	Approach,
+	Leave,
+};
+
 class Enemy {
 
 public:
@@ -24,6 +30,7 @@ public:
 	float GetRotationX() const { return worldTranform_.rotation_.x; }
 	void SetRotationX(float rotationX) { worldTranform_.rotation_.x = rotationX; }
 
+	Phase phase_ = Phase::Approach;
 
 private:
 
