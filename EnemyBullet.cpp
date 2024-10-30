@@ -14,26 +14,27 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 }
 
 void EnemyBullet::Update() {
-	worldTransform_.UpdateMatrix();
-	worldTransform_.translation_ -= velocity_;
+	// 位置を更新
+	worldTransform_.translation_ += velocity_; // 弾が前に進むように修正
 
-	// 発射カウントが指定の間隔に達したら発射
-	if (++fireTimer_ >= kFireInterval) {
-		Fire();
-		fireTimer_ = 0; // カウントをリセット
-	}
-
-	// 弾の寿命をカウント
+	// 寿命をカウント
 	if (--deathTimer_ <= 0) {
 		isDead_ = true;
 	}
+
+	// ワールド変換の行列を更新
+	worldTransform_.UpdateMatrix();
 }
+
 
 void EnemyBullet::Draw(const ViewProjection& viewProjection) { model_->Draw(worldTransform_, viewProjection, textureHandle_); }
 
 void EnemyBullet::Fire() {
 	// 弾の初期位置や速度を設定する処理
-	// 必要に応じて弾を生成する
-	// 例: 弾を特定の位置から指定の速度で発射
-	worldTransform_.translation_ -= velocity_; // 現在位置に速度を加える
+	// 弾を特定の位置から指定の速度で発射
+	EnemyBullet* newBullet = new EnemyBullet();
+	newBullet->Initialize(model_, worldTransform_.translation_, velocity_); // 現在位置と速度を使って弾を生成
+
+	// 弾をenemyBullets_に追加
+	enemyBullets_.push_back(newBullet);
 }

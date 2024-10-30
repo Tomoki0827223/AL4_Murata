@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 
 /// <summary>
 /// 3次元ベクトル
@@ -53,5 +54,18 @@ public:
 		y /= scalar;
 		z /= scalar;
 		return *this;
+	}
+
+	// ベクトルの長さを計算するメソッド
+	float Length() const { return std::sqrt(x * x + y * y + z * z); }
+
+	// ベクトルを正規化するメソッド
+	void Normalize() {
+		float length = Length();
+		if (length > 0) {
+			x /= length;
+			y /= length;
+			z /= length;
+		}
 	}
 };

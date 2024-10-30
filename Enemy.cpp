@@ -19,61 +19,27 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vie
 	walkTimer = 0.0f;
 
 	// 初期フェーズ設定
-	phase_ = Phase::Approach;
+	phase_ = Phase::Leave;
 }
 
-void Enemy::Update() {
+void Enemy::Update(Vector3 playerPosition) {
 	// 速度分だけ位置を更新
 	worldTranform_.translation_.x += velocity_.x;
 	worldTranform_.translation_.y += velocity_.y;
 	worldTranform_.translation_.z += velocity_.z;
 
-	// 移動タイマーと回転の計算
-	walkTimer += 1.0f / 60.0f;
-	float parm = std::sin(std::numbers::pi_v<float> * 2.0f * walkTimer / kWalkMotionTime);
-	float radian = kWalkMotionAngleStart + kWalkMontionAngleEnd * (parm + 1.0f) / 2.0f;
-	worldTranform_.rotation_.z = radian;
-
-	// フェーズごとの動作
-	switch (phase_) {
-	case Phase::Approach:
-		worldTranform_.translation_.z -= 0.02f;
-		if (worldTranform_.translation_.z <= -2.0f) {
-			phase_ = Phase::Leave;
-		}
-		break;
-
-	case Phase::Leave:
-		worldTranform_.translation_.x += 0.03f;
-		if (worldTranform_.translation_.z >= 5.0f) {
-			phase_ = Phase::Approach;
-		}
-		break;
-
-	default:
-		break;
+	// プレイヤーに向かって移動
+	Vector3 direction = playerPosition - worldTranform_.translation_;
+	if (direction.Length() > 0) {
+		direction.Normalize();
+		worldTranform_.translation_.x += direction.x * kApproachSpeed; // プレイヤーに向かって進む
+		worldTranform_.translation_.y += direction.y * kApproachSpeed;
+		worldTranform_.translation_.z += direction.z * kApproachSpeed;
 	}
 
-	// 弾発射のタイミングを管理
-	if (--attackTimer_ <= 0) {
-		Attack();
-		attackTimer_ = kAttackInterval; // カウンタをリセット
-	}
 
-	// 弾の更新と削除
-	for (auto it = enemyBullets_.begin(); it != enemyBullets_.end();) {
-		(*it)->Update();
-		if ((*it)->isDead()) {
-			delete *it;
-			it = enemyBullets_.erase(it);
-		} else {
-			++it;
-		}
-	}
-
-	// ワールド変換の行列を更新
-	worldTranform_.UpdateMatrix();
 }
+
 
 void Enemy::Draw() {
 	model_->Draw(worldTranform_, *viewProjection_, textureHandle_);

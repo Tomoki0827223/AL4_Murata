@@ -17,7 +17,7 @@ class Enemy {
 public:
 	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection);
 
-	void Update();
+	void Update(Vector3 playerPosition);
 
 	void Draw();
 
@@ -36,6 +36,8 @@ public:
 	Phase phase_ = Phase::Approach;
 
 	std::list<EnemyBullet*> enemyBullets_;
+
+	static constexpr float kApproachSpeed = 0.1f;
 
 private:
 	static inline const float kWalkSpeed = 0.05f;

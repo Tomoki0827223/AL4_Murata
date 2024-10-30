@@ -46,24 +46,27 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-	player_->Update();
-	enemy_->Update();
+	// プレイヤーの位置を取得して渡す
+	Vector3 playerPosition = player_->GetPosition();
+	enemy_->Update(playerPosition); // Playerの位置を引数として渡す
+
+	player_->Update(enemy_);
 
 	Vector3 enemyPosition = enemy_->GetPosition();
 	Vector3 enemyVelocity = enemy_->GetVelocity();
 	float enemyRotationX = enemy_->GetRotationX();
 
 	ImGui::Begin("Enemy Controls");
-	ImGui::SliderFloat3("Position", &enemyPosition.x, -10.0f, 10.0f);   // 位置を調整
-	ImGui::SliderFloat("Velocity Z", &enemyVelocity.z, -1.0f, 1.0f);    // Z軸速度を調整
-	ImGui::SliderAngle("Rotation X", &enemyRotationX, -180.0f, 180.0f); // 回転角を調整
+	ImGui::SliderFloat3("Position", &enemyPosition.x, -10.0f, 10.0f);
+	ImGui::SliderFloat("Velocity Z", &enemyVelocity.z, -1.0f, 1.0f);
+	ImGui::SliderAngle("Rotation X", &enemyRotationX, -180.0f, 180.0f);
 	ImGui::End();
 
-	// ImGuiの変更をEnemyに適用
 	enemy_->SetPosition(enemyPosition);
 	enemy_->SetVelocity(enemyVelocity);
 	enemy_->SetRotationX(enemyRotationX);
 }
+
 
 void GameScene::Draw() {
 

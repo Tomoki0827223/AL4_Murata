@@ -3,7 +3,6 @@
 
 Player::~Player() {
 
-
 	for (PlayerBullet* bullet : bullets_) {
 		delete bullet;
 	}
@@ -12,7 +11,7 @@ Player::~Player() {
 }
 
 void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection) {
-	
+
 	input_ = Input::GetInstance();
 	assert(model);
 
@@ -23,7 +22,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 	viewProjection_ = viewProjection;
 }
 
-void Player::Update() {
+void Player::Update(Enemy* targetEnemy) {
 	const float kCharacterSpeed = 1.0f;
 
 	// 移動量を毎フレームリセット
@@ -55,17 +54,17 @@ void Player::Update() {
 	worldTransform_.translation_ += move;
 
 	Rotate(); // 回転処理
-	Attack(); // 攻撃処理
+	Attack(targetEnemy);
 
-	for (PlayerBullet* bullet : bullets_) {
-
-		bullet->Update();
+	for (auto& bullet : bullets_) {
+		if (!bullet->isDead()) {
+			bullet->Update(targetEnemy->GetPosition()); // 敵の位置を引数として渡す
+		}
 	}
 
 	// アフィン変換行列を更新
 	worldTransform_.UpdateMatrix();
 }
-
 
 
 void Player::Rotate() {
@@ -82,25 +81,26 @@ void Player::Rotate() {
 	}
 }
 
-void Player::Attack() 
-{
+void Player::Attack(Enemy* targetEnemy) {
 	if (input_->PushKey(DIK_SPACE)) {
+		Vector3 targetPosition = targetEnemy->GetPosition(); // 敵の位置を取得
 
-		const float kBulletSpeed = 1.0f;
-		Vector3 velocity(0, 0, kBulletSpeed);
-
-		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+		// 初期速度を敵の方向に設定
+		Vector3 direction = targetPosition - worldTransform_.translation_;
+		direction.Normalize();
+		Vector3 initialVelocity = direction * PlayerBullet::kBulletSpeed; // 追尾速度を設定
 
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+		newBullet->Initialize(model_, worldTransform_.translation_, initialVelocity, targetPosition); // ここで初期速度を渡す
 
 		bullets_.push_back(newBullet);
 	}
 }
 
-void Player::Draw() 
-{ 
-	model_->Draw(worldTransform_, *viewProjection_, textureHandle_); 
+
+
+void Player::Draw() {
+	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
 
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Draw(*viewProjection_);
