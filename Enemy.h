@@ -27,7 +27,7 @@ public:
 
 private:
 
-	static inline const float kWalkSpeed = 0.03f;
+	static inline const float kWalkSpeed = 0.1f;
 	static inline const float kWalkMotionAngleStart = 0.0f;
 	static inline const float kWalkMontionAngleEnd = 30.0f;
 	static inline const float kWalkMotionTime = 1.0f;
