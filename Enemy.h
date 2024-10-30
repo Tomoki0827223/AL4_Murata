@@ -1,11 +1,13 @@
 #pragma once
 
+#include "EnemyBullet.h"
 #include "Model.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "affine.h"
+#include <list>
 
 enum class Phase {
-
 	Approach,
 	Leave,
 };
@@ -13,12 +15,13 @@ enum class Phase {
 class Enemy {
 
 public:
-
 	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection);
 
 	void Update();
 
 	void Draw();
+
+	void Attack();
 
 	// Getter/Setterの追加
 	Vector3 GetPosition() const { return worldTranform_.translation_; }
@@ -32,12 +35,14 @@ public:
 
 	Phase phase_ = Phase::Approach;
 
-private:
+	std::list<EnemyBullet*> enemyBullets_;
 
-	static inline const float kWalkSpeed = 0.1f;
+private:
+	static inline const float kWalkSpeed = 0.05f;
 	static inline const float kWalkMotionAngleStart = 0.0f;
 	static inline const float kWalkMontionAngleEnd = 30.0f;
 	static inline const float kWalkMotionTime = 1.0f;
+	static inline const int32_t kAttackInterval = 120; // 弾発射間隔（120フレーム）
 
 	Model* model_ = nullptr;
 	WorldTransform worldTranform_;
@@ -46,8 +51,5 @@ private:
 	float walkTimer = 0.0f;
 	uint32_t textureHandle_ = 0;
 
-
-
-
-
+	int32_t attackTimer_ = kAttackInterval; // 弾発射のためのカウンタ
 };
