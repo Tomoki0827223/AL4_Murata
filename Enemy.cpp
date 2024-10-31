@@ -17,9 +17,6 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vie
 	worldTranform_.translation_ = {0, 0.0f, 5.0f}; // 初期Z位置を5に設定
 	velocity_ = {0, 0, -kWalkSpeed};
 	walkTimer = 0.0f;
-
-	// 初期フェーズ設定
-	phase_ = Phase::Leave;
 }
 
 void Enemy::Update(Vector3 playerPosition) {
@@ -37,7 +34,32 @@ void Enemy::Update(Vector3 playerPosition) {
 		worldTranform_.translation_.z += direction.z * kApproachSpeed;
 	}
 
+		// フェーズごとの動作
+	switch (phase_) {
+	case Phase::Approach:
+		// Z方向へ近づく
+		worldTranform_.translation_.z -= 0.02f;
 
+		// Z位置が閾値に達したらフェーズをLeaveに変更
+
+		if (worldTranform_.translation_.z <= -2.0f) {
+			phase_ = Phase::Leave;
+		}
+		break;
+
+	case Phase::Leave:
+		// 離れる動作（例えばZを増加させる）
+		worldTranform_.translation_.x += 0.03f;
+
+		// Z位置が一定以上になったらApproachに戻す
+		if (worldTranform_.translation_.z >= 5.0f) {
+			phase_ = Phase::Approach;
+		}
+		break;
+
+	default:
+		break;
+	}
 }
 
 
