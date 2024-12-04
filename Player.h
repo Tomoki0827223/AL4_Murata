@@ -13,9 +13,9 @@ public:
 	~Player();
 
 	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection);
-	void Update(Enemy* targetEnemy);
+	void Update();
 	void Rotate();
-	void Attack(Enemy* targetEnemy);
+	void Attack();
 	void Draw();
 
 	Input* input_ = nullptr;
